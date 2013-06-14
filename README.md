@@ -18,5 +18,13 @@ var yourArgHandler = args.Args.generate([
 	}
 ]);
 
-yourArgHandler.parse(Sys.args());
+var args = Sys.args();
+if (args.length == 0) Sys.println(yourArgHandler.getDoc());
+else yourArgHandler.parse(args);
 ```
+
+Features
+=======
+
+- parses commands
+- comes in a class
