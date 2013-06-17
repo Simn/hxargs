@@ -1,4 +1,4 @@
-package args;
+package hxargs;
 
 import haxe.macro.Context;
 import haxe.macro.Expr;
