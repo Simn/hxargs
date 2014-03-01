@@ -40,7 +40,16 @@ class Args {
 			var fArgs = switch(action.expr) {
 				case EFunction(name, func):
 					for (i in 0...func.args.length) {
-						args.push(macro __args[__index + $v{i}]);
+						var e = macro __args[__index + $v{i}];
+						var e = switch [func.args[i].type, func.args[i].value] {
+							case [null, null]: e;
+							case [TPath({ name: "String"}), _] | [null, macro $v{(_:String)}]: e;
+							case [TPath({ name: "Int"}), _] | [null, macro $v{(_:Int)}]: macro Std.parseInt($e);
+							case [TPath({ name: "Float"}), _] | [null, macro $v{(_:Float)}]: macro Std.parseFloat($e);
+							case [TPath({ name: "Bool"}), _] | [null, (macro true) | (macro false)]: macro $e == "true" ? true : false;
+							case [t, _]: Context.error('Unsupported argument type: $t', action.pos);
+						}
+						args.push(e);
 					}
 					func.args;
 				case _: Context.error("Function expected", action.pos);
@@ -104,7 +113,7 @@ class Args {
 			getDoc: function() {
 				return $v{docs.map(function(doc) return doc.cmd.rpad(" ", maxCmdLength + 1) + ": " +doc.desc).join("\n")};
 			},
-			parse: function(__args:Array<String>) {
+			parse: function(__args:Array<Dynamic>) {
 				var __index = 0;
 				while (__index < __args.length) {
 					$eswitch;
