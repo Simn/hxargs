@@ -7,7 +7,7 @@ using haxe.macro.Tools;
 using StringTools;
 
 class Args {
-	macro static public function generate(definition:Expr) {
+	macro static public function generate(definition:Expr, ?interactive:Bool = false) {
 		var p = Context.currentPos();
 		var el = switch(definition.expr) {
 			case EArrayDecl(el): el;
@@ -75,13 +75,40 @@ class Args {
 				case EConst(CString(_)): [cmds];
 				case _: Context.error("[commands] or command expected", cmds.pos);
 			}
-			var e = macro {
-				if (__index + $v{fArgs.length} > __args.length)
+			
+			var e = if(!interactive) macro {
+				if (__index + $v{fArgs.length} > __args.length) {
 					throw "Not enough arguments: " +__args[__index -1]+ " expects " + $v{fArgs.length};
+				}
+				${action}($a{args});
+				__index += $v{fArgs.length};
+			} else macro {
+				var __argInfo = $a{fArgs.map(function(arg) {
+					var arg = {
+						name: arg.name.replace("_", " "),
+						type: arg.type,
+						opt: arg.opt || arg.value != null,
+						value: $v{arg.value == null ? null : arg.value.getValue()}
+					}
+					return macro $v{arg};
+				})};
+				while (__index + $v{fArgs.length} > __args.length) {
+					var currentArg = __argInfo[__args.length - 1];
+					Sys.print(currentArg.name + (currentArg.value != null ? " (default = " + currentArg.value + ")" : currentArg.opt ? " (optional)" : "") + ": ");
+					var s = Sys.stdin().readLine();
+					if (s == "") {
+						if (currentArg.opt) {
+							__args.push(currentArg.value);
+						} else {
+							Sys.println("Cannot skip non-optional argument " +currentArg.name);
+						}
+					} else {
+						__args.push(s);
+					}
+				}
 				${action}($a{args});
 				__index += $v{fArgs.length};
 			}
-
 			cases.push({
 				values: cmds,
 				guard: null,
