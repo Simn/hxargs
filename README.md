@@ -6,7 +6,7 @@ A really small command line parser
 Usage
 ======
 
-```
+```haxe
 var yourArgHandler = hxargs.Args.generate([
 	@doc("Documentation for your command")
 	["-cmd", "--alternative-command"] => function(arg:String) {
@@ -23,7 +23,7 @@ if (args.length == 0) Sys.println(yourArgHandler.getDoc());
 else yourArgHandler.parse(args);
 ```
 
-Example: https://github.com/Simn/dox/blob/master/src/dox/Dox.hx#L26
+[Example](https://github.com/Simn/dox/blob/master/src/dox/Dox.hx#L25-L51)
 
 Features
 =======
