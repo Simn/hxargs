@@ -13,13 +13,13 @@ class Args {
 			case EArrayDecl(el): el;
 			case _: Context.error("Command mapping expected", p);
 		}
-		
+
 		var unknownArgCallback = macro throw "Unknown command: " +arg;
-		
+
 		var docs = [];
 		var cases = [];
 		var maxCmdLength = 0;
-		
+
 		function addDoc(e, s, args:Array<FunctionArg>) {
 			var e = switch(e.expr) {
 				case EParenthesis(e): e;
@@ -34,7 +34,7 @@ class Args {
 				desc: s
 			});
 		}
-		
+
 		function addCase(cmds, action) {
 			var args = [];
 			var fArgs = switch(action.expr) {
@@ -75,7 +75,7 @@ class Args {
 				case EConst(CString(_)): [cmds];
 				case _: Context.error("[commands] or command expected", cmds.pos);
 			}
-			
+
 			var e = if(!interactive) macro {
 				if (__index + $v{fArgs.length} > __args.length) {
 					throw "Not enough arguments: " +__args[__index -1]+ " expects " + $v{fArgs.length};
@@ -115,7 +115,7 @@ class Args {
 				expr: e
 			});
 		}
-				
+
 		for (e in el) {
 			switch(e.expr) {
 				case EBinop(OpArrow, cmds, action):
@@ -124,13 +124,13 @@ class Args {
 					Context.error("Command mapping expected", e.pos);
 			}
 		}
-		
+
 		cases.push({
 			values: [macro arg],
 			guard: null,
 			expr: unknownArgCallback
 		});
-		
+
 		var eswitch = {
 			expr: ESwitch(macro __args[__index++], cases, null),
 			pos: p
