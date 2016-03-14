@@ -35,7 +35,7 @@ class Args {
 			});
 		}
 
-		function addCase(cmds, action) {
+		function addCase(cmds:Expr, action) {
 			var args = [];
 			var fArgs = switch(action.expr) {
 				case EFunction(name, func):
