@@ -7,8 +7,8 @@
     "cross"
   ],
   "description": "A really small command line parser",
-  "version": "3.0.1",
-  "releasenote": "Added haxelib.json file.",
+  "version": "3.0.2",
+  "releasenote": "Minor type inference fix.",
   "contributors": ["Simn", "ypid"],
   "dependencies": { }
 }
