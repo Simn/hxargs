@@ -54,8 +54,8 @@ class Args {
 					func.args;
 				case _: Context.error("Function expected", action.pos);
 			}
-			cmds = switch(cmds.expr) {
-				case EMeta({name: "doc", params: [{expr: EConst(CString(s))}]}, e):
+			cmds = switch(cmds) {
+				case macro @doc($v{(s:String)}) $e:
 					addDoc(e, s, fArgs);
 					e;
 				case _: cmds;
