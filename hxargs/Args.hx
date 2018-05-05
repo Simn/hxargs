@@ -6,6 +6,11 @@ import haxe.macro.Expr;
 using haxe.macro.Tools;
 using StringTools;
 
+typedef ArgHandler = {
+	function getDoc():String;
+	function parse(args:Array<Dynamic>):Void;
+}
+
 class Args {
 	macro static public function generate(definition:Expr, ?interactive:Bool = false) {
 		var p = Context.currentPos();
