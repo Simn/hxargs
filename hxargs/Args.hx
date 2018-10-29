@@ -66,7 +66,7 @@ class Args {
 				case _: cmds;
 			}
 			var cmds = switch(cmds.expr) {
-				case EArrayDecl(el):
+				case EArrayDecl(el) | EParenthesis({expr: ECheckType({expr: EArrayDecl(el), pos: _}, _), pos: _}):
 					for (e in el) {
 						switch(e.expr) {
 							case EConst(CString(_)):
